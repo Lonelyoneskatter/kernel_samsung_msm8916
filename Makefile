@@ -577,11 +577,10 @@ all: vmlinux
 # Kill all maybe-uninitialized warnings
 KBUILD_CFLAGS	+= $(call cc-disable-warning,maybe-uninitialized,)
 
-ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-KBUILD_CFLAGS	+= -Os
-else
-KBUILD_CFLAGS	+= -O2
-endif
+# Optimizations
+KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
+KBUILD_CFLAGS	+= -fsanitize=leak -g0 -DNDEBUG
+KBUILD_CFLAGS	+= -mtune=cortex-a53 -mfloat-abi=softfp -mfpu=neon-vfpv4
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
 
